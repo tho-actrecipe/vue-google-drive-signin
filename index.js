@@ -5,7 +5,7 @@ export default Vue.directive('google-signin-button', {
         CheckComponentMethods()
         let clientId = binding.value
         let googleSignInAPI = document.createElement('script')
-        googleSignInAPI.setAttribute('src', 'https://apis.google.com/js/api:client.js')
+        googleSignInAPI.setAttribute('src', 'https://apis.google.com/js/api.js')
         document.head.appendChild(googleSignInAPI)
 
         googleSignInAPI.onload = InitGoogleButton
@@ -15,21 +15,21 @@ export default Vue.directive('google-signin-button', {
                 const auth2 = gapi.auth2.init({
                     client_id: clientId,
                     scope: 'https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.file',
-                    cookiepolicy: 'single_host_origin'
+                    cookie_policy: 'single_host_origin',
+                    fetch_basic_profile: false
                 })
                 auth2.attachClickHandler(el, {},
                     OnSuccess,
-                    Onfail
+                    OnFail
                 )
             })
         }
 
         function OnSuccess(googleUser) {
             vnode.context.OnGoogleAuthSuccess(googleUser.getAuthResponse())
-            googleUser.disconnect()
         }
 
-        function Onfail(error) {
+        function OnFail(error) {
             vnode.context.OnGoogleAuthFail(error)
         }
 
